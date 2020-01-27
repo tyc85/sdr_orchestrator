@@ -8,3 +8,12 @@ vagrant up
 vagrant ssh
 ## Tear down
 vagrant destroy
+
+## Test LimeSDRwithUSB
+vagrant up
+vagrant ssh
+#In Vagrant
+./run_limesdr
+#In Docker within Vagrant
+LimeUtil --find
+#Check if device show up
