@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
+
+Vagrant.configure("2") do |config|
+  ##### DEFINE VM #####
+  config.vm.define "ubuntu-01" do |config|
+  config.vm.hostname = "ubuntu-01"
+  config.vm.box = "generic/ubuntu1804"
+  config.vm.box_check_update = false
+  config.vm.network "private_network", ip: "192.168.10.50"
+  end
+  
+  config.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+      vb.customize ["modifyvm", :id, "--usb", "on"]
+      vb.customize ["modifyvm", :id, "--usbehci", "on"]
+      #USB3.0
+      vb.customize ["modifyvm", :id, "--usbxhci", "on"]
+      vb.customize ["usbfilter", "add", "0", 
+        "--target", :id, 
+        "--name", "This is the identifier",
+        "--manufacturer", "Myriad-RF",
+        "--product", "LimeSDR-USB"]
+      # Customize the amount of memory on the VM:
+      #   vb.memory = "1024"
+  end
+
+  #Copy Docker image and script to Vagrant VM
+  config.vm.provision "file", source: "../../docker/Dockerfile", destination: "$HOME/"
+  config.vm.provision "file", source: "../../docker/build_sdr.sh", destination: "$HOME/"
+  config.vm.provision "file", source: "../../docker/run_sdr.sh", destination: "$HOME/"
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    sudo apt-get install -y apache2
+    sudo apt install -y docker.io
+    # add user vagrant 
+    sudo usermod -aG docker vagrant
+    sudo ./build_sdr.sh
+  SHELL
+
+
+end
