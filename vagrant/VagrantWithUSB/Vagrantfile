@@ -29,9 +29,11 @@ Vagrant.configure("2") do |config|
   end
 
   #Copy Docker image and script to Vagrant VM
-  config.vm.provision "file", source: "../../docker/Dockerfile", destination: "$HOME/"
-  config.vm.provision "file", source: "../../docker/build_sdr.sh", destination: "$HOME/"
-  config.vm.provision "file", source: "../../docker/run_sdr.sh", destination: "$HOME/"
+  #config.vm.provision "file", source: "../../docker/Dockerfile", destination: "$HOME/"
+  #config.vm.provision "file", source: "../../docker/build_sdr.sh", destination: "$HOME/"
+  #config.vm.provision "file", source: "../../docker/run_sdr.sh", destination: "$HOME/"
+  #config.vm.provision "file", source: "../../docker/docker-compose.yaml", destination: "$HOME/"
+  config.vm.provision "file", source: "../../docker", destination: "$HOME/"
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
@@ -39,10 +41,11 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
     sudo apt-get install -y apache2
-    sudo apt install -y docker.io
+    sudo apt install -y docker.io docker-compose
     # add user vagrant 
     sudo usermod -aG docker vagrant
-    sudo ./build_sdr.sh
+    #sudo ./build_sdr.sh
+    #sudo ./docker/pull_sdr.sh
   SHELL
 
 
