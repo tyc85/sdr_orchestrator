@@ -18,7 +18,7 @@ services:
     devices:
       - /dev/net/tun
   srsenb:
-    container_name: virtual-srsenb
+    container_name: srsenb
     build: .
     command:
       - srsenb
