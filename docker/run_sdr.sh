@@ -1,5 +1,5 @@
 #
-IMG="ubuntu_limesdr:latest"
+IMG="4141studio/sdr-ubuntu-srslte-lime:v1"
 docker run \
   -t -i \
   --rm \
