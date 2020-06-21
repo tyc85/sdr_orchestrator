@@ -8,11 +8,12 @@ spec:
   containers:
   - name: limesdr-srs-ue
     volumeMounts:
-    - mountPath: /.config/srslte
+    - mountPath: /etc/srs/ue
       name: srs-ue-conf
     image: 4141studio/sdr-ubuntu-srslte-lime:v1
     imagePullPolicy: Always
-    command: [ "sh", "-c", "sleep 12h" ]
+    #command: [ "sh", "-c", "sleep 12h" ]
+    command: [ "srsue", "/etc/srs/ue/ue.conf" ]
     securityContext:
       privileged: true
   volumes:
