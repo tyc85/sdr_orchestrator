@@ -8,7 +8,7 @@ spec:
   containers:
   - name: limesdr-srs-ue
     volumeMounts:
-    - mountPath: /data/srs/ue
+    - mountPath: /.config/srslte
       name: srs-ue-conf
     image: 4141studio/sdr-ubuntu-srslte-lime:v1
     imagePullPolicy: Always
