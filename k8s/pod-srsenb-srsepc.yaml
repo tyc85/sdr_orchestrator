@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsepc-srsenb
+spec:
+  imagePullSecrets:
+  - name: dockerhub-4141studio
+  containers:
+  - name: enb
+    image: 4141studio/sdr-ubuntu-srslte-lime:v1
+    imagePullPolicy: Always
+    #command: [ "sh", "-c", "sleep 1h" ]
+    command:
+      - srsenb
+      - /root/.config/srslte/enb.conf
+      - --enb_files.sib_config=sib.conf
+    securityContext:
+      privileged: true
+  - name: epc
+    image: 4141studio/sdr-ubuntu-srslte-lime:v1
+    imagePullPolicy: Always
+    #command: [ "sh", "-c", "sleep 1h" ]
+    command:
+      - srsepc
+      - /root/.config/srslte/epc.conf
+    ports:
+    - containerPort: 2152
+    securityContext:
+      privileged: true
+
+
+
