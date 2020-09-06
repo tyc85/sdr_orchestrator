@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: ConfigMap 
+metadata:
+  name: srsue-configmap
+data:
+  ue.conf: |
+    [rf]
+    device_name = "limesdr"
+    device_args = "serial=0009072C00D7311E"
+    dl_earfcn = 3400
+    freq_offset = 0
+    tx_gain = 80
+    [pcap]
+    enable = false
+    filename = /tmp/ue.pcap
+    nas_enable = false
+    nas_filename = /tmp/nas.pcap
+    [log]
+    all_level = warning
+    phy_lib_level = none
+    all_hex_limit = 32
+    filename = /tmp/ue.log
+    file_max_size = -1
+    [usim]
+    mode = soft
+    algo = xor
+    #opc  = 63BFA50EE6523365FF14C1F45F88737D
+    k    = 00112233445566778899aabbccddeeff
+    imsi = 001010123456789
+    imei = 353490069873319
+    [rrc]
+    ue_category   = 4
+    release       = 8
+    [nas]
+    #apn = internetinternet
+    #apn_protocol = ipv4
+    #user = srsuser
+    #pass = srspass
+    #force_imsi_attach = false
+    #eia = 1,2
+    #eea = 0,1,2
+
+    [gui]
+    enable = false
+
+
+
