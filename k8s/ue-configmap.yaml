@@ -6,7 +6,6 @@ metadata:
 data:
   ue.conf: |
     [rf]
-    device_name = "limesdr"
     device_args = "serial=0009072C00D7311E"
     dl_earfcn = 3400
     freq_offset = 0
