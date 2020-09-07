@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap 
 metadata:
-  name: srsenb-configmap
+  name: srsepc-configmap
 data:
   user_db.csv: |
     ue1,mil,001010123456789,00112233445566778899aabbccddeeff,opc,63bfa50ee6523365ff14c1f45f88737d,8000,000000001234,7,dynamic
