@@ -11,10 +11,10 @@ data:
     freq_offset = 0
     tx_gain = 80
     [pcap]
-    enable = false
+    enable = true
     filename = /tmp/ue.pcap
-    nas_enable = false
-    nas_filename = /tmp/nas.pcap
+    #nas_enable = false
+    #nas_filename = /tmp/nas.pcap
     [log]
     all_level = warning
     phy_lib_level = none
@@ -23,8 +23,8 @@ data:
     file_max_size = -1
     [usim]
     mode = soft
-    algo = xor
-    #opc  = 63BFA50EE6523365FF14C1F45F88737D
+    algo = milenage
+    opc  = 63BFA50EE6523365FF14C1F45F88737D
     k    = 00112233445566778899aabbccddeeff
     imsi = 001010123456789
     imei = 353490069873319
@@ -32,14 +32,13 @@ data:
     ue_category   = 4
     release       = 8
     [nas]
-    #apn = internetinternet
+    apn = internet
     #apn_protocol = ipv4
     #user = srsuser
     #pass = srspass
     #force_imsi_attach = false
     #eia = 1,2
     #eea = 0,1,2
-
     [gui]
     enable = false
 

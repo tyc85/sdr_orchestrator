@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: srsepc-srsenb-svc
+  labels:
+    app: srsepc-srsenb 
+spec:
+  ports:
+  - port: 80
+    name: srsepc-srsenb-web
+  clusterIP: None
+  selector:
+    app: srsepc-srsenb 
+
+---
+apiVersion: apps/v1
+kind: StatefulSet 
+metadata:
+  name: srsepc-srsenb-statefulset
+  labels:
+    app: srsepc-srsenb
+spec:
+  replicas: 1
+  serviceName: srsepc-srsenb-svc
+  selector:
+    matchLabels:
+      app: srsepc-srsenb
+  template:
+    metadata:
+      labels:
+        app: srsepc-srsenb
+    spec:
+      imagePullSecrets:
+      - name: dockerhub-4141studio
+      volumes:
+      - name: enb-config
+        configMap:
+          name: srsenb-configmap 
+      - name: epc-config
+        configMap:
+          name: srsepc-configmap 
+      containers:
+      - name: enb
+        image: localhost:32000/sdr-ubuntu-srslte-lime:v4 
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: enb-config
+          mountPath: "/etc/srslte/"
+        #command: [ "sh", "-c", "sleep 1h" ]
+        command:
+          - srsenb
+          - /etc/srslte/enb.conf
+          - --rf.device_args=serial=90726074D031F
+          #- --enb_files.sib_config=sib.conf
+        securityContext:
+          privileged: true
+      - name: epc
+        image: localhost:32000/sdr-ubuntu-srslte-lime:v4 
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: epc-config
+          mountPath: "/etc/srslte/"
+        #command: [ "sh", "-c", "sleep 1h" ]
+        command:
+          - srsepc
+          - /src/srslte/epc.conf
+        ports:
+        - containerPort: 2152
+        securityContext:
+          privileged: true
+
+
+
