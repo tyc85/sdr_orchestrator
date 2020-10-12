@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsue-pod
+spec:
+  imagePullSecrets:
+  - name: dockerhub-4141studio
+  volumes:
+  - name: config
+    configMap:
+      name: srsue-configmap
+  containers:
+  - name: limesdr
+    #image: 4141studio/sdr-ubuntu-srslte-lime:v1
+    image: localhost:32000/sdr-ubuntu-srslte-lime:v4 
+    imagePullPolicy: Always
+    volumeMounts:
+    - name: config
+      mountPath: "/etc/srslte/"
+      readOnly: false
+    command: [ "sh", "-c", "sleep 12h" ]
+    securityContext:
+      privileged: true

@@ -28,11 +28,13 @@ apt-get install -y limesuite \
   vim
 
 WORKDIR /root
-RUN git clone https://github.com/srsLTE/srsLTE.git
+#RUN git clone https://github.com/srsLTE/srsLTE.git
+#RUN git clone -b dev https://github.com/tyc85/srsLTE
+ADD ./srsLTE ./srsLTE
 WORKDIR /root/srsLTE
 RUN mkdir build && pwd && ls -lat
 WORKDIR /root/srsLTE/build
-RUN cmake ../ && make && make install && ldconfig
+RUN cmake ../ -DUSE_LTE_RATES=ON && make && make install && ldconfig
 RUN srslte_install_configs.sh user
 
 CMD /bin/bash -c "trap : TERM INT; sleep infinity & wait"
