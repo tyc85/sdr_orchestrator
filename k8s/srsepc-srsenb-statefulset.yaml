@@ -41,7 +41,7 @@ spec:
           name: srsepc-configmap 
       containers:
       - name: enb
-        image: localhost:32000/sdr-ubuntu-srslte-lime:v5 
+        image: localhost:32000/sdr-ubuntu-srslte-lime:0.0.3
         imagePullPolicy: Always
         volumeMounts:
         - name: enb-config
@@ -50,13 +50,13 @@ spec:
         command:
           - srsenb
           - /etc/srslte/enb.conf
-          - --rf.device_args=serial=00090726074D031F
+          #- --rf.device_args=serial=00090726074D031F
           # 0009072C00D7311E is the one with soft antennas
           #- --enb_files.sib_config=sib.conf
         securityContext:
           privileged: true
       - name: epc
-        image: localhost:32000/sdr-ubuntu-srslte-lime:v5
+        image: localhost:32000/sdr-ubuntu-srslte-lime:0.0.3
         imagePullPolicy: Always
         volumeMounts:
         - name: epc-config
