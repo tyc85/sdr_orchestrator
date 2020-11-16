@@ -35,6 +35,7 @@ WORKDIR /root/srsLTE
 RUN mkdir build && pwd && ls -lat
 WORKDIR /root/srsLTE/build
 RUN cmake ../ -DUSE_LTE_RATES=ON && make && make install && ldconfig
+# consider using system?
 RUN srslte_install_configs.sh user
 
 CMD /bin/bash -c "trap : TERM INT; sleep infinity & wait"
