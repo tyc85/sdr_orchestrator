@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: limesdr-srs-ue
+  name: testpod-srs-ue
 spec:
   imagePullSecrets:
   - name: dockerhub-4141studio
   containers:
-  - name: limesdr-srs-ue
+  - name: ue
     volumeMounts:
     - mountPath: /etc/srs/ue
       name: srs-ue-conf
     image: 4141studio/sdr-ubuntu-srslte-lime:v1
     imagePullPolicy: Always
-    #command: [ "sh", "-c", "sleep 12h" ]
-    command: [ "srsue", "/etc/srs/ue/ue.conf" ]
+    command: [ "sh", "-c", "sleep 12h" ]
+    #command: [ "srsue", "/etc/srs/ue/ue.conf" ]
     securityContext:
       privileged: true
   volumes:

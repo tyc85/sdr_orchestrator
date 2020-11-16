@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: srsue-pod
+  name: testpod-srsue
 spec:
   imagePullSecrets:
   - name: dockerhub-4141studio
@@ -18,6 +18,10 @@ spec:
     - name: config
       mountPath: "/etc/srslte/"
       readOnly: false
-    command: [ "sh", "-c", "sleep 12h" ]
+    command: [ "sh", "-c", "sleep 3h" ]
+    #command: 
+    #- srsue
+    #- /etc/srslte/ue.conf
+    #- --rf.device_args=serial=0009072C00D7311E 
     securityContext:
       privileged: true

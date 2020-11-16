@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: srsepc-srsenb-pod
+  name: testpod-srsepc-srsenb
 spec:
   imagePullSecrets:
   - name: dockerhub-4141studio
@@ -12,20 +12,21 @@ spec:
       name: srsenb-configmap 
   containers:
   - name: enb
-    image: 4141studio/sdr-ubuntu-srslte-lime:v1
+    image: localhost:32000/sdr-ubuntu-srslte-lime:v2 
     imagePullPolicy: Always
     volumeMounts:
     - name: config
       mountPath: "/etc/srslte/"
-    #command: [ "sh", "-c", "sleep 1h" ]
-    command:
-      - srsenb
-      - /etc/srslte/enb.conf
-      #- --enb_files.sib_config=sib.conf
+    command: [ "sh", "-c", "sleep 1h" ]
+    #command:
+    #  - srsenb
+    #  - /etc/srslte/enb.conf
+    #  - --rf.device_args=serial=90726074D031F
+    #  - --enb_files.sib_config=sib.conf
     securityContext:
       privileged: true
   - name: epc
-    image: 4141studio/sdr-ubuntu-srslte-lime:v1
+    image: localhost:32000/sdr-ubuntu-srslte-lime:v2 
     imagePullPolicy: Always
     #command: [ "sh", "-c", "sleep 1h" ]
     command:
