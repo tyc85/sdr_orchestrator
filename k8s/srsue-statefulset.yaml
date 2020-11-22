@@ -49,7 +49,7 @@ spec:
         command: 
         - srsue
         - /etc/srslte/ue.conf
-        #- --rf.device_args=serial=00090726074D031F
+        - --rf.device_args=serial=00090726074D031F
         #- --rf.device_args=serial=0009072C00D7311E 
         securityContext:
           privileged: true

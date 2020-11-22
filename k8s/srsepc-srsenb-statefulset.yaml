@@ -51,6 +51,7 @@ spec:
           - srsenb
           - /etc/srslte/enb.conf
           #- --rf.device_args=serial=00090726074D031F
+          - --rf.device_args=serial=0009072C00D7311E 
           # 0009072C00D7311E is the one with soft antennas
           #- --enb_files.sib_config=sib.conf
         securityContext:
