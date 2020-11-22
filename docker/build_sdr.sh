@@ -8,5 +8,6 @@ fi
 TAG=${1}
 #IMG="sdr-ubuntu-srslte-lime:v1"
 IMG="sdr-ubuntu-srslte-lime:${TAG}"
-docker build . -t \
-  $IMG
+docker build . -t $IMG
+
+echo $IMG > CURRENT_IMAGE

@@ -37,8 +37,7 @@ spec:
           name: srsue-configmap
       containers:
       - name: ue
-        #image: 4141studio/sdr-ubuntu-srslte-lime:v1
-        image: localhost:32000/sdr-ubuntu-srslte-lime:v4 
+        image: localhost:32000/sdr-ubuntu-srslte-lime:0.0.3
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -50,6 +49,7 @@ spec:
         command: 
         - srsue
         - /etc/srslte/ue.conf
-        - --rf.device_args=serial=0009072C00D7311E 
+        - --rf.device_args=serial=00090726074D031F
+        #- --rf.device_args=serial=0009072C00D7311E 
         securityContext:
           privileged: true

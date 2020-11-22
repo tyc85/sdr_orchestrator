@@ -4,6 +4,54 @@ kind: ConfigMap
 metadata:
   name: srsenb-configmap
 data:
+  enb.conf: |
+    [enb]
+    enb_id = 0x19B
+    # following parameters seems deprecated in srsLTE
+    #cell_id = 0x01
+    #phy_cell_id = 1
+    #tac = 0x0007
+    mcc = 001
+    mnc = 01
+    mme_addr = 127.0.1.100
+    gtp_bind_addr = 127.0.1.1
+    s1c_bind_addr = 127.0.1.1
+    n_prb = 25   
+    # starting with SISO
+    tm = 1
+    nof_ports = 1
+
+    [enb_files]
+    sib_config = sib.conf
+    rr_config  = rr.conf
+    drb_config = drb.conf
+
+    [rf]
+    dl_earfcn = 3400
+    tx_gain = 80
+    rx_gain = 40
+    [log]
+    all_level = warning
+    all_hex_limit = 32
+    filename = /tmp/enb.log
+    file_max_size = -1
+
+    [gui]
+    enable = false
+    [scheduler]
+    #pdsch_mcs        = -1
+    #pdsch_max_mcs    = -1
+    #pusch_mcs        = -1
+    pusch_max_mcs    = 16
+    # deprecated
+    #nof_ctrl_symbols = 3
+    # new variables 
+    #min_nof_ctrl_symbols = 1
+    #max_nof_ctrl_symbols = 3
+    [embms]
+    enable = false
+    #m1u_multiaddr = 239.255.0.1
+    #m1u_if_addr = 127.0.1.201
   drb.conf: |
     qci_config = (
 
@@ -227,42 +275,4 @@ data:
         };
 
 
-  enb.conf: |
-    [enb]
-    enb_id = 0x19B
-    cell_id = 0x01
-    phy_cell_id = 1
-    tac = 0x0007
-    mcc = 001
-    mnc = 01
-    mme_addr = 127.0.1.100
-    gtp_bind_addr = 127.0.1.1
-    s1c_bind_addr = 127.0.1.1
-    n_prb = 50   
-    tm = 1
-    nof_ports = 1
-
-    [enb_files]
-    sib_config = sib.conf
-    rr_config  = rr.conf
-    drb_config = drb.conf
-
-    [rf]
-    dl_earfcn = 3400
-    tx_gain = 80
-    rx_gain = 40
-    [log]
-    all_level = warning
-    all_hex_limit = 32
-    filename = /tmp/enb.log
-    file_max_size = -1
-
-    [gui]
-    enable = false
-    [scheduler]
-    #pdsch_mcs        = -1
-    #pdsch_max_mcs    = -1
-    #pusch_mcs        = -1
-    pusch_max_mcs    = 16
-    nof_ctrl_symbols = 3
-
+  
