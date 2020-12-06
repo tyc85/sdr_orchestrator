@@ -1,0 +1,3 @@
+[submodule "docker/srsLTE"]
+	path = docker/srsLTE
+	url = git@github.com:tyc85/srsLTE.git
