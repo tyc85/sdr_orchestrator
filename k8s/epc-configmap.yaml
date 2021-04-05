@@ -5,22 +5,23 @@ metadata:
   name: srsepc-configmap
 data:
   user_db.csv: |
-    ue1,mil,001010123456789,00112233445566778899aabbccddeeff,opc,63bfa50ee6523365ff14c1f45f88737d,8000,000000001234,7,dynamic
+    ue1,mil,001480123456789,00112233445566778899aabbccddeeff,opc,63bfa50ee6523365ff14c1f45f88737d,8000,000000001234,7,dynamic
+    ue2,mil,001480123456789,00112233445566778899aabbccddeeff,opc,63bfa50ee6523365ff14c1f45f88737d,9000,000000000000,9,dynamic
   epc.conf: |
     [mme]
     mme_code = 0x1a
     mme_group = 0x0001
     tac = 0x0007
     mcc = 001
-    mnc = 01
+    mnc = 48
     mme_bind_addr = 127.0.1.100
-    apn = srsapn
+    apn = internet 
     dns_addr = 8.8.8.8
     encryption_algo = EEA0
     integrity_algo = EIA1
     paging_timer = 2 
     [hss]
-    db_file = user_db.csv
+    db_file = /etc/srslte/user_db.csv
     [spgw]
     gtpu_bind_addr   = 127.0.1.100
     sgi_if_addr      = 172.16.0.1

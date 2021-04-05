@@ -12,7 +12,7 @@ data:
     #phy_cell_id = 1
     #tac = 0x0007
     mcc = 001
-    mnc = 01
+    mnc = 48
     mme_addr = 127.0.1.100
     gtp_bind_addr = 127.0.1.1
     s1c_bind_addr = 127.0.1.1
@@ -22,18 +22,24 @@ data:
     nof_ports = 1
 
     [enb_files]
-    sib_config = sib.conf
-    rr_config  = rr.conf
-    drb_config = drb.conf
+    sib_config = /etc/srslte/sib.conf
+    rr_config  = /etc/srslte/rr.conf
+    drb_config = /etc/srslet/drb.conf
 
     [rf]
-    dl_earfcn = 3400
+    dl_earfcn = 1720 
+    #freq_offset = -1000
     tx_gain = 80
     rx_gain = 40
     [log]
-    all_level = warning
-    all_hex_limit = 32
-    filename = /tmp/enb.log
+    # Logging layers: rf, phy, phy_lib, mac, rlc, pdcp, rrc, gtpu, s1ap, stack, all
+    # Logging levels: debug, info, warning, error, none
+    all_level = warning 
+    mac_level = info 
+    phy_level = info 
+    rf_level = info 
+    all_hex_limit = 64
+    filename = /tmp/enb/enb.log
     file_max_size = -1
 
     [gui]
@@ -151,128 +157,166 @@ data:
         mode = "periodic";
         simultaneousAckCQI = true; 
         period = 40; // in ms
-        subframe = [0];
+        //subframe = [0];
         nof_prb = 2; 
+        m_ri = 8; // RI period in CQI period
       };
     }
-      sib.conf: |
-        sib1 =
+
+    cell_list =
+    (
+      {
+        // rf_port = 0;
+        cell_id = 0x01;
+        tac = 0x0007;
+        pci = 1;
+        // root_seq_idx = 204;
+        dl_earfcn = 3400;
+        //ul_earfcn = 21400;
+        ho_active = false;
+
+        // CA cells
+        scell_list = (
+          // {cell_id = 0x02; cross_carrier_scheduling = false; scheduling_cell_id = 0x02; ul_allowed = true}
+        )
+
+        // Cells available for handover
+        meas_cell_list =
+        (
+          //{
+          //  eci = 0x19C02;
+          //  dl_earfcn = 2850;
+          //  pci = 2;
+          //}
+        );
+
+        // ReportCfg (only A3 supported)
+        meas_report_desc = {
+          a3_report_type = "RSRP";
+          a3_offset = 6;
+          a3_hysteresis = 0;
+          a3_time_to_trigger = 480;
+          rsrq_config = 4;
+        };
+      }
+      // Add here more cells
+    );
+  sib.conf: |
+    sib1 =
+    {
+        intra_freq_reselection = "Allowed";
+        q_rx_lev_min = -65;
+        //p_max = 3;
+        cell_barred = "NotBarred"
+        si_window_length = 20;
+        sched_info =
+        (
+            {
+                si_periodicity = 16;
+                si_mapping_info = []; // comma-separated array of SIB-indexes (from 3 to 13). 
+                // Leave empty or commented to just scheduler sib2
+            }
+        );
+        system_info_value_tag = 0;
+    };
+
+    sib2 = 
+    {
+        rr_config_common_sib =
         {
-            intra_freq_reselection = "Allowed";
-            q_rx_lev_min = -65;
-            //p_max = 3;
-            cell_barred = "NotBarred"
-            si_window_length = 20;
-            sched_info =
-            (
+            rach_cnfg = 
+            {
+                num_ra_preambles = 52;
+                preamble_init_rx_target_pwr = -104;
+                pwr_ramping_step = 6;  // in dB
+                preamble_trans_max = 10;
+                ra_resp_win_size = 10;  // in ms
+                mac_con_res_timer = 64; // in ms
+                max_harq_msg3_tx = 4;
+            };
+            bcch_cnfg = 
+            {
+                modification_period_coeff = 16; // in ms
+            };
+            pcch_cnfg = 
+            {
+                default_paging_cycle = 32; // in rf
+                nB = "1";
+            };
+            prach_cnfg =
+            {
+                root_sequence_index = 128;
+                prach_cnfg_info =
                 {
-                    si_periodicity = 16;
-                    si_mapping_info = []; // comma-separated array of SIB-indexes (from 3 to 13). 
-                    // Leave empty or commented to just scheduler sib2
-                }
-            );
-            system_info_value_tag = 0;
+                    high_speed_flag = false;
+                    prach_config_index = 3;
+                    prach_freq_offset = 2;
+                    zero_correlation_zone_config = 6;
+                };
+            };
+            pdsch_cnfg = 
+            {
+                /* Warning: Currently disabled and forced to p_b=1 for TM2/3/4 and p_b=0 for TM1
+                 */
+                p_b = 1;
+                rs_power = 0;
+            };
+            pusch_cnfg = 
+            {
+                n_sb = 1;
+                hopping_mode = "inter-subframe";
+                pusch_hopping_offset = 2;
+                enable_64_qam = false; // 64QAM PUSCH is not currently enabled
+                ul_rs = 
+                {
+                    cyclic_shift = 0; 
+                    group_assignment_pusch = 0;
+                    group_hopping_enabled = false; 
+                    sequence_hopping_enabled = false; 
+                };
+            };
+            pucch_cnfg =
+            {
+                delta_pucch_shift = 2;
+                n_rb_cqi = 2;
+                n_cs_an = 0;
+                n1_pucch_an = 12;
+            };
+            ul_pwr_ctrl =
+            {
+                p0_nominal_pusch = -85;
+                alpha = 0.7;
+                p0_nominal_pucch = -107;
+                delta_flist_pucch =
+                {
+                    format_1  = 0;
+                    format_1b = 3; 
+                    format_2  = 1;
+                    format_2a = 2;
+                    format_2b = 2;
+                };
+                delta_preamble_msg3 = 6;
+            };
+            ul_cp_length = "len1";
         };
 
-        sib2 = 
+        ue_timers_and_constants =
         {
-            rr_config_common_sib =
-            {
-                rach_cnfg = 
-                {
-                    num_ra_preambles = 52;
-                    preamble_init_rx_target_pwr = -104;
-                    pwr_ramping_step = 6;  // in dB
-                    preamble_trans_max = 10;
-                    ra_resp_win_size = 10;  // in ms
-                    mac_con_res_timer = 64; // in ms
-                    max_harq_msg3_tx = 4;
-                };
-                bcch_cnfg = 
-                {
-                    modification_period_coeff = 16; // in ms
-                };
-                pcch_cnfg = 
-                {
-                    default_paging_cycle = 32; // in rf
-                    nB = "1";
-                };
-                prach_cnfg =
-                {
-                    root_sequence_index = 128;
-                    prach_cnfg_info =
-                    {
-                        high_speed_flag = false;
-                        prach_config_index = 3;
-                        prach_freq_offset = 2;
-                        zero_correlation_zone_config = 5;
-                    };
-                };
-                pdsch_cnfg = 
-                {
-                    /* Warning: Currently disabled and forced to p_b=1 for TM2/3/4 and p_b=0 for TM1
-                     */
-                    p_b = 1;
-                    rs_power = 0;
-                };
-                pusch_cnfg = 
-                {
-                    n_sb = 1;
-                    hopping_mode = "inter-subframe";
-                    pusch_hopping_offset = 2;
-                    enable_64_qam = false; // 64QAM PUSCH is not currently enabled
-                    ul_rs = 
-                    {
-                        cyclic_shift = 0; 
-                        group_assignment_pusch = 0;
-                        group_hopping_enabled = false; 
-                        sequence_hopping_enabled = false; 
-                    };
-                };
-                pucch_cnfg =
-                {
-                    delta_pucch_shift = 2;
-                    n_rb_cqi = 2;
-                    n_cs_an = 0;
-                    n1_pucch_an = 12;
-                };
-                ul_pwr_ctrl =
-                {
-                    p0_nominal_pusch = -85;
-                    alpha = 0.7;
-                    p0_nominal_pucch = -107;
-                    delta_flist_pucch =
-                    {
-                        format_1  = 0;
-                        format_1b = 3; 
-                        format_2  = 1;
-                        format_2a = 2;
-                        format_2b = 2;
-                    };
-                    delta_preamble_msg3 = 6;
-                };
-                ul_cp_length = "len1";
-            };
-
-            ue_timers_and_constants =
-            {
-                t300 = 2000; // in ms
-                t301 = 100;  // in ms
-                t310 = 1000; // in ms
-                n310 = 1;
-                t311 = 1000; // in ms
-                n311 = 1;
-            };
-
-            freqInfo = 
-            {
-                ul_carrier_freq_present = true; 
-                ul_bw_present = true; 
-                additional_spectrum_emission = 1; 
-            };
-
-            time_alignment_timer = "INFINITY"; // use "sf500", "sf750", etc.
+            t300 = 2000; // in ms
+            t301 = 100;  // in ms
+            t310 = 1000; // in ms
+            n310 = 1;
+            t311 = 1000; // in ms
+            n311 = 1;
         };
 
+        freqInfo = 
+        {
+            ul_carrier_freq_present = true; 
+            ul_bw_present = true; 
+            additional_spectrum_emission = 1; 
+        };
 
-  
+        time_alignment_timer = "INFINITY"; // use "sf500", "sf750", etc.
+    };
+

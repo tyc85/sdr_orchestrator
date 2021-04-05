@@ -6,8 +6,8 @@ metadata:
 data:
   ue.conf: |
     [rf]
-    dl_earfcn = 3400
-    freq_offset = 0
+    dl_earfcn = 1720 
+    freq_offset = 1000
     tx_gain = 60
     rx_gain = 60
     [pcap]
@@ -21,14 +21,14 @@ data:
     phy_level = info
     rf_level = info
     all_hex_limit = 32
-    filename = /tmp/ue.log
+    filename = /tmp/ue/ue.log
     file_max_size = -1
     [usim]
     mode = soft
     algo = milenage
-    opc  = 63BFA50EE6523365FF14C1F45F88737D
+    opc  = 63bfa50ee6523365ff14c1f45f88737d
     k    = 00112233445566778899aabbccddeeff
-    imsi = 001010123456789
+    imsi = 001480123456789
     imei = 353490069873319
     [rrc]
     ue_category   = 4

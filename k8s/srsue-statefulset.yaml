@@ -35,13 +35,23 @@ spec:
       - name: config
         configMap:
           name: srsue-configmap
+      - name: ue-log
+        emptyDir: {}
       containers:
+      - name: ue-logger
+        image: python:3.8.9-slim-buster
+        volumeMounts:
+        - name: ue-log
+          mountPath: "/tmp/ue/"
+        command: ["sh", "-c", "tail -f /tmp/ue/ue.log"]
       - name: ue
-        image: localhost:32000/sdr-ubuntu-srslte-lime:0.0.3
+        image: localhost:32000/sdr-ubuntu-srslte-lime:0.0.4
         imagePullPolicy: Always
         ports:
         - containerPort: 80
         volumeMounts:
+        - name: ue-log
+          mountPath: "/tmp/ue/"
         - name: config
           mountPath: "/etc/srslte/"
           readOnly: false

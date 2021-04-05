@@ -39,11 +39,21 @@ spec:
       - name: epc-config
         configMap:
           name: srsepc-configmap 
+      - name: enb-log
+        emptyDir: {}
       containers:
+      - name: enb-logger
+        image: python:3.8.9-slim-buster
+        volumeMounts:
+        - name: enb-log
+          mountPath: "/tmp/enb/"
+        command: ["sh", "-c", "tail -f /tmp/enb/enb.log"]
       - name: enb
-        image: localhost:32000/sdr-ubuntu-srslte-lime:0.0.3
+        image: localhost:32000/sdr-ubuntu-srslte-lime:0.0.4
         imagePullPolicy: Always
         volumeMounts:
+        - name: enb-log
+          mountPath: "/tmp/enb/"
         - name: enb-config
           mountPath: "/etc/srslte/"
         #command: [ "sh", "-c", "sleep 1h" ]
@@ -57,7 +67,7 @@ spec:
         securityContext:
           privileged: true
       - name: epc
-        image: localhost:32000/sdr-ubuntu-srslte-lime:0.0.3
+        image: localhost:32000/sdr-ubuntu-srslte-lime:0.0.4
         imagePullPolicy: Always
         volumeMounts:
         - name: epc-config
